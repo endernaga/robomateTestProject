@@ -8,20 +8,20 @@ def get_resume_information(url: str):
 
     soup = soup.find("div", {"class": "card wordwrap mt-0"})
 
-    job_position = soup.find('h2', class_='mt-lg sm:mt-xl').text.strip()
+    job_position = soup.find('h2', class_='mt-lg sm:mt-xl').text.strip().replace("\xa0", " ")
 
     work_experiences = soup.find_all('p', class_='mb-0')
     years_of_experience = []
     for experience in work_experiences:
         years = experience.find('span', class_='text-default-7')
         if years:
-            years_of_experience.append(years.text.strip())
+            years_of_experience.append(years.text.strip().replace("\xa0", " "))
 
-    skills = [skill.text.strip() for skill in soup.find_all('span', class_='label label-skill label-gray-100')]
+    skills = [skill.text.strip().replace("\xa0", " ") for skill in soup.find_all('span', class_='label label-skill label-gray-100')]
 
-    location = soup.find('dd').text.strip()
+    location = soup.find('dd').text.strip().replace("\xa0", " ")
 
-    salary = soup.find("span", {"class": "text-muted-print"}).text
+    salary = soup.find("span", {"class": "text-muted-print"}).text.replace("\xa0", " ")
 
     return {"job_position": job_position, "years_of_experience": years_of_experience, "skills": skills,
             "location": location, "salary": salary}
