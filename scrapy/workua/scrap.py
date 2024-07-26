@@ -26,7 +26,11 @@ def get_resume_information(url: str):
 
     location = soup.find("dd").text.strip().replace("\xa0", " ")
 
-    salary = soup.find("span", {"class": "text-muted-print"}).text.replace("\xa0", " ")
+    salary = (
+        soup.find("span", {"class": "text-muted-print"}).text.replace("\xa0", " ")
+        if soup.find("span", {"class": "text-muted-print"})
+        else None
+    )
 
     return {
         "job_position": job_position,
@@ -52,30 +56,31 @@ def get_resumes_pages(req):
         },
     )
 
-    return [resume.find("a").get("href") for resume in resumes]
+    return [
+        get_resume_information("https://www.work.ua" + resume.find("a").get("href"))
+        for resume in resumes
+    ]
 
 
 def get_resumes_pages_with_pagination(url: str):
-    print(f"parsing {url}")
     req = requests.get(url).content
     soup = BeautifulSoup(req, "html5lib")
 
     labels = soup.find("div", {"class": "col-md-8"})
 
-    resumes_list = []
+    while not labels.find("li", {"class": "no-style disabled add-left-default"}):
 
-    resumes_list.extend(get_resumes_pages(req))
+        yield get_resumes_pages(req)
 
-    if labels.find("li", {"class": "no-style disabled add-left-default"}):
+        next_page_li = labels.find("li", {"class": "no-style add-left-default"})
+        next_page_url = "https://www.work.ua" + next_page_li.find("a").get("href")
 
-        return resumes_list
+        req = requests.get(next_page_url).content
+        soup = BeautifulSoup(req, "html5lib")
 
-    next_page_li = labels.find("li", {"class": "no-style add-left-default"})
-    next_page_url = next_page_li.find("a").get("href")
-
-    return get_resumes_pages_with_pagination("https://www.work.ua" + next_page_url)
-
+        labels = soup.find("div", {"class": "col-md-8"})
 
 
 if __name__ == "__main__":
-    print(get_resumes_pages_with_pagination("https://www.work.ua/resumes/?period=6"))
+    for i in get_resumes_pages_with_pagination("https://www.work.ua/resumes/?period=6"):
+        print(len(i))
