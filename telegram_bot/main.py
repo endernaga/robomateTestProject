@@ -33,8 +33,10 @@ class TelegramBot:
 
     async def get_min_salary(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         context.user_data["filters"]["salaryfrom"] = update.message.text
-        await update.message.reply_text("enter a max salary or /skip to skip")
-        print(update.message.text)
+        await update.message.reply_text(
+            """enter a max salary or /skip to skip
+available values is: {1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 100000, 150000, 200000, 250000, 300000, 400000, 500000, 1000000}"""
+        )
 
         return self.SALARYTO
 
@@ -43,7 +45,10 @@ class TelegramBot:
         if context.user_data["filters"].get("salaryfrom"):
             del context.user_data["filters"]["salaryfrom"]
         await update.message.reply_text("you skipped min salary")
-        await update.message.reply_text("enter a max salary or /skip to skip")
+        await update.message.reply_text(
+            """enter a max salary or /skip to skip
+available values is: {1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 100000, 150000, 200000, 250000, 300000, 400000, 500000, 1000000}"""
+        )
 
         return self.SALARYTO
 
@@ -173,7 +178,10 @@ class TelegramBot:
 
     async def filter(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         context.user_data["filters"] = {}
-        await update.message.reply_text("enter a min salary or /skip to skip")
+        await update.message.reply_text(
+            """enter a min salary or /skip to skip
+available values is: {1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 100000, 150000, 200000, 250000, 300000, 400000, 500000, 1000000}"""
+        )
 
         return self.SALARYFROM
 
