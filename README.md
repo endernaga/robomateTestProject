@@ -24,7 +24,9 @@ _Below is an example of how you can instruct your audience on installing and set
    ```sh
    git clone https://github.com/endernaga/https://github.com/endernaga/robomateTestProject
    ```
-2. Install python packages
+   
+2. create .env file from .env.sample example
+3. Install python packages
    ```sh
    docker build .
    ```
