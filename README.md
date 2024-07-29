@@ -14,6 +14,7 @@ To get a local copy up and running follow these simple example steps.
 ### Prerequisites
 
 First of us you need to install docker from https://www.docker.com/
+Secondary create a telegram bot using @BotFather 
 
 ### Installation
 
